@@ -1,0 +1,45 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "Public or private profile of an authenticated user",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "description": "Firebase Auth UID" },
+        "displayName": { "type": "string", "description": "Display name of the user" },
+        "email": { "type": "string", "description": "User email address" },
+        "photoURL": { "type": "string", "description": "User avatar photo URL" },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Profile creation timestamp" },
+        "lastLoginAt": { "type": "string", "format": "date-time", "description": "Last sign-in timestamp" }
+      },
+      "required": ["uid", "email"]
+    },
+    "JournalEntry": {
+      "title": "JournalEntry",
+      "description": "User journal entry containing reflections, prompts, and Gemini responses",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Unique entry identifier" },
+        "userId": { "type": "string", "description": "Owner user ID for strict tenant isolation" },
+        "title": { "type": "string", "description": "Title or topic of the journal session" },
+        "mood": { "type": "string", "description": "User self-selected mood or emotion" },
+        "summary": { "type": "string", "description": "AI-generated or user summary of the entry" },
+        "tags": { "type": "array", "description": "Category tags for the reflection" },
+        "messages": { "type": "array", "description": "Chronological multi-turn interaction between user and Gemini" },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Entry creation timestamp" },
+        "updatedAt": { "type": "string", "format": "date-time", "description": "Last update timestamp" }
+      },
+      "required": ["id", "userId", "title", "createdAt", "updatedAt"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "UserProfile",
+      "description": "Root user record isolated by user ID"
+    },
+    "/users/{userId}/entries/{entryId}": {
+      "schema": "JournalEntry",
+      "description": "User-isolated journal entries and reflection chats"
+    }
+  }
+}
